@@ -3,6 +3,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
 import { handleApiRequest } from './src/server/api.js';
+import { initDb } from './src/server/db.js';
 
 dotenv.config();
 
@@ -11,6 +12,9 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 const port = process.env.PORT || 3000;
+
+// Initialize Database
+initDb();
 
 app.use(express.json());
 

@@ -1,0 +1,748 @@
+{
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "api/data",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "239026a2-e670-42f0-bfd5-e7ac7ecbd951",
+      "name": "Dashboard API",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -416,
+        240
+      ],
+      "webhookId": "dd4d6976-e7d5-49ce-83d6-1b913bc8f47e"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.body.type }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "rightValue": "history",
+                    "id": "5fab17e2-d729-4cf0-aa13-1364fd09bb82"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.body.type }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "rightValue": "prediction",
+                    "id": "b562c1a2-46b2-43b5-93ea-ad31d60f5d4d"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.body.type }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "rightValue": "chat",
+                    "id": "0acbd1fc-ee5a-4dbe-90d1-42d03f4b9041"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.body.type }}",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "rightValue": "overview",
+                    "id": "e61ae005-2cd2-4148-8c8d-e8e4600b6799"
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "id": "0520451f-e9ae-48cb-b54b-ae04588f09f3",
+      "name": "Route by Type",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        -192,
+        192
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "\n{{\n  \"SELECT * FROM kpi_history WHERE annee = (SELECT MAX(annee) FROM kpi_history)\" +\n  ($json.body.payload.period === 'week'    ? \" AND jour >= DATE_SUB((SELECT MAX(jour) FROM kpi_history), INTERVAL 7 DAY)\"   : \"\") +\n  ($json.body.payload.period === 'month'   ? \" AND mois = (SELECT MAX(mois) FROM kpi_history WHERE annee = (SELECT MAX(annee) FROM kpi_history))\" : \"\") +\n  ($json.body.payload.period === 'quarter' ? \" AND trimestre = (SELECT MAX(trimestre) FROM kpi_history WHERE annee = (SELECT MAX(annee) FROM kpi_history))\" : \"\") +\n  \" AND id > \" + parseInt($json.body.payload.lastId || 0) +\n  \" ORDER BY id ASC LIMIT 1000\"\n}}",
+        "options": {}
+      },
+      "id": "ae75cb8f-48a1-49ee-9d63-2d3b6950fed1",
+      "name": "Query History Data",
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.5,
+      "position": [
+        32,
+        -240
+      ],
+      "credentials": {
+        "mySql": {
+          "id": "D96LvJ5HmIif9R13",
+          "name": "MySQL account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst data = items.map(item => item.json);\nconst nextId = data.length > 0 ? data[data.length - 1].id : null;\nconst hasMore = data.length === 1000;\n\nreturn [{\n  json: {\n    type: 'history',\n    data: data,\n    nextId: nextId,\n    hasMore: hasMore,\n    batchSize: data.length,\n    columns: {\n      dimensions: ['jour','site','service','jour_semaine','annee','mois','trimestre'],\n      volume: ['volume_tickets','tickets_termines','tickets_abandonnes','tickets_en_pause'],\n      rates: ['taux_abandon','taux_service','occupation_guichets','productivite_agent','taux_pause','taux_redirection'],\n      wait: ['duree_attente_moy','duree_attente_p90','duree_traitement_moy'],\n      sla: ['sla_breach_count'],\n      guichets: ['nb_guichets_actifs','flux_par_heure','tickets_par_guichet'],\n      distribution: ['pct_moins5min','pct5a10min','pct10a20min','pct_plus20min'],\n      peak: ['heure_pointe','volume_heure_pointe'],\n      calendar: ['is_special_day','special_day_label']\n    },\n    message: hasMore ? 'More data available. Send next request with lastId: ' + nextId : 'All history data retrieved'\n  }\n}];"
+      },
+      "id": "8660ac94-0983-4b72-b7a2-2edfcdf03091",
+      "name": "Format History Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        256,
+        -240
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "5fb23a0b-c2f0-41b3-9d6e-6b4584cf616f",
+      "name": "Send History Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        544,
+        -240
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "\n{{\n  \"SELECT * FROM kpi_predictions WHERE annee = (SELECT MAX(annee) FROM kpi_predictions)\" +\n  ($json.body.payload.period === 'week'    ? \" AND date >= DATE_SUB((SELECT MAX(date) FROM kpi_predictions), INTERVAL 7 DAY)\"   : \"\") +\n  ($json.body.payload.period === 'month'   ? \" AND mois = (SELECT MAX(mois) FROM kpi_predictions WHERE annee = (SELECT MAX(annee) FROM kpi_predictions))\" : \"\") +\n  ($json.body.payload.period === 'quarter' ? \" AND trimestre = (SELECT MAX(trimestre) FROM kpi_predictions WHERE annee = (SELECT MAX(annee) FROM kpi_predictions))\" : \"\") +\n  \" AND id > \" + parseInt($json.body.payload.lastId || 0) +\n  \" ORDER BY id ASC LIMIT 1000\"\n}}",
+        "options": {}
+      },
+      "id": "5baca1cd-e5bc-49f8-b84f-443b0d5340e9",
+      "name": "Query Prediction Data",
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.5,
+      "position": [
+        32,
+        -48
+      ],
+      "credentials": {
+        "mySql": {
+          "id": "D96LvJ5HmIif9R13",
+          "name": "MySQL account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst data = items.map(item => item.json);\nconst nextId = data.length > 0 ? data[data.length - 1].id : null;\nconst hasMore = data.length === 1000;\n\nreturn [{\n  json: {\n    type: 'prediction',\n    data: data,\n    nextId: nextId,\n    hasMore: hasMore,\n    batchSize: data.length,\n    columns: {\n      dimensions: ['date','site','service','jour_semaine','annee','mois','trimestre','semaine','granularite'],\n      volume: ['volume_tickets','tickets_termines','tickets_abandonnes'],\n      rates: ['taux_abandon','taux_service','occupation_guichets','productivite_agent','taux_pause'],\n      wait: ['duree_attente_moy','duree_attente_p90','duree_traitement_moy'],\n      sla: ['sla_breach_count'],\n      guichets: ['nb_guichets_actifs','flux_par_heure','tickets_par_guichet'],\n      distribution: ['pct_moins5min','pct5a10min','pct10a20min','pct_plus20min'],\n      peak: ['volume_heure_pointe'],\n      metadata: ['is_prediction','created_at']\n    },\n    message: hasMore ? 'More data available. Send next request with lastId: ' + nextId : 'All prediction data retrieved'\n  }\n}];"
+      },
+      "id": "09ce4801-4ea7-4109-a7a5-6c52d87c2cbf",
+      "name": "Format Prediction Response",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        256,
+        -48
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "ff79fe78-7eaa-48a1-8c80-f9809fd4b177",
+      "name": "Send Prediction Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        544,
+        -48
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// ── STEP 1: Detect if the question needs SQL or is conversational ────────\nconst question = $('Dashboard API').first().json.body.payload.question || '';\n\n// Keywords that suggest a data question\nconst dataKeywords = [\n  'show', 'give', 'list', 'count', 'average', 'avg', 'total', 'sum',\n  'compare', 'top', 'worst', 'best', 'highest', 'lowest', 'rate',\n  'ticket', 'wait', 'service', 'site', 'abandon', 'sla', 'breach',\n  'occupation', 'productivit', 'guichet', 'predict', 'history',\n  'montre', 'donne', 'liste', 'comparer', 'taux', 'moyenne', 'total'\n];\n\nconst lower = question.toLowerCase();\nconst needsData = dataKeywords.some(kw => lower.includes(kw));\n\nreturn [{\n  json: {\n    question: question,\n    needsData: needsData,\n    webhookBody: $('Dashboard API').first().json.body\n  }\n}];"
+      },
+      "id": "c8211dd2-4628-42e0-b834-2bb7c5b0ac12",
+      "name": "Detect Intent",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        32,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": false,
+                  "leftValue": "",
+                  "typeValidation": "loose",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.needsData }}",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true"
+                    },
+                    "id": "needs-data-check"
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "id": "e7f0e9ae-69bf-48f1-a470-ee03fcadc03a",
+      "name": "Route by Intent",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        256,
+        240
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Convert this question into a valid MySQL SELECT statement ONLY. Return ONLY the raw SQL, no explanation, no markdown, no backticks.\n\nQuestion: {{ $json.question }}\n\nAvailable tables:\n\nkpi_history columns:\nid, jour, annee, mois, trimestre, jour_semaine, site, service,\nvolume_tickets, tickets_termines, tickets_abandonnes, tickets_en_pause,\ntaux_abandon, duree_attente_moy, duree_attente_p90, duree_traitement_moy,\ntaux_service, sla_breach_count, occupation_guichets, nb_guichets_actifs,\nproductivite_agent, flux_par_heure, tickets_par_guichet, taux_redirection,\npct_moins5min, pct5a10min, pct10a20min, pct_plus20min,\nheure_pointe, volume_heure_pointe, taux_pause, is_special_day, special_day_label\n\nkpi_predictions columns:\nid, date, annee, mois, trimestre, jour_semaine, semaine, site, service,\nvolume_tickets, tickets_termines, tickets_abandonnes,\ntaux_abandon, duree_attente_moy, duree_attente_p90, duree_traitement_moy,\ntaux_service, sla_breach_count, occupation_guichets, nb_guichets_actifs,\nproductivite_agent, flux_par_heure, tickets_par_guichet,\npct_moins5min, pct5a10min, pct10a20min, pct_plus20min,\nvolume_heure_pointe, taux_pause, granularite, is_prediction, created_at\n\nRules:\n- taux_service, taux_abandon, occupation_guichets, productivite_agent are 0-1 ratios, multiply by 100 for %\n- Always filter: annee = (SELECT MAX(annee) FROM kpi_history) unless user specifies year\n- Date filter on kpi_history: use column jour\n- Date filter on kpi_predictions: use column date\n- MUST include LIMIT 1000\n- Return ONLY the SQL query. No text before or after it.\n- For aggregations (totals, averages, per-site/service), always use GROUP BY and aggregate functions (SUM, COUNT, AVG) to return summarized results instead of raw rows.",
+        "options": {
+          "systemMessage": "You are a MySQL expert. Output ONLY a raw SQL SELECT statement. Never include explanations, markdown formatting, backticks, or any text other than the SQL itself. The first character of your response must be S (from SELECT)."
+        }
+      },
+      "id": "f9920c4a-0cee-4240-a55c-d157ece9284c",
+      "name": "Generate SQL Query",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        480,
+        144
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// ── Clean and validate the SQL output ───────────────────────────────────\nconst raw = $input.first().json.output || '';\n\n// Strip markdown fences, backticks, leading/trailing whitespace\nlet sqlQuery = raw\n  .replace(/```sql/gi, '')\n  .replace(/```/g, '')\n  .replace(/^sql\\s*/i, '')\n  .trim();\n\n// If it doesn't start with SELECT, try to extract it\nif (!sqlQuery.toUpperCase().startsWith('SELECT')) {\n  const match = sqlQuery.match(/SELECT[\\s\\S]+/i);\n  if (match) {\n    sqlQuery = match[0].trim();\n  } else {\n    // Not SQL at all — pass through as a direct answer\n    return [{ json: { isCasual: true, answer: raw.trim() } }];\n  }\n}\n\n// Block dangerous keywords\nconst dangerous = ['INSERT', 'UPDATE', 'DELETE', 'DROP', 'ALTER', 'CREATE', 'TRUNCATE'];\nconst upperQuery = sqlQuery.toUpperCase();\nfor (const keyword of dangerous) {\n  if (upperQuery.includes(keyword)) {\n    return [{ json: { isCasual: true, answer: 'I cannot execute that type of query.' } }];\n  }\n}\n\n// Ensure only allowed tables\nconst allowedTables = ['kpi_history', 'kpi_predictions'];\nconst foundTable = allowedTables.some(t => upperQuery.includes(t.toUpperCase()));\nif (!foundTable) {\n  return [{ json: { isCasual: true, answer: 'I can only query kpi_history or kpi_predictions.' } }];\n}\n\n// Add LIMIT if missing\nif (!upperQuery.includes('LIMIT')) {\n  sqlQuery = sqlQuery.replace(/;?\\s*$/, '') + ' LIMIT 1000';\n}\n\nreturn [{ json: { query: sqlQuery, validated: true, isCasual: false } }];"
+      },
+      "id": "908f8b49-b5c8-4ff3-b546-9e060d36eb8d",
+      "name": "Validate SQL",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        832,
+        144
+      ]
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.isCasual }}",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "false"
+                    },
+                    "id": "is-sql-check"
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "id": "3cf37709-6bc5-49ab-a76a-eeae6395c152",
+      "name": "SQL or Casual",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        1120,
+        144
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "{{ $json.query }}",
+        "options": {}
+      },
+      "id": "336a149e-9ad2-4b32-beaf-4245d1631c5b",
+      "name": "Execute Query",
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.5,
+      "position": [
+        1408,
+        96
+      ],
+      "credentials": {
+        "mySql": {
+          "id": "D96LvJ5HmIif9R13",
+          "name": "MySQL account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Analyze this data and provide a professional business intelligence summary in the same language as the original question.\n\nOriginal Question: {{ $('Dashboard API').first().json.body.payload.question }}\n\nQuery Results (first 20 rows): {{ JSON.stringify($input.all().map(i => i.json).slice(0, 20)) }}\nTotal rows: {{ $input.all().length }}\n\nStructure your response as:\n\n**Key Findings**\n- What the numbers actually show\n\n**Trends or Patterns**\n- Notable highs, lows, or changes\n\n**Risk Indicators**\n- Any SLA breaches, high abandonment, low service rates, overloaded guichets\n\n**Recommendations**\n- Concrete actions the director can take\n\nKeep it professional, concise, and actionable.",
+        "options": {
+          "systemMessage": "You are a business intelligence analyst. Provide clear, actionable insights from data."
+        }
+      },
+      "id": "920667b9-0188-4b80-9b1b-193d6537d6d9",
+      "name": "Analyze Data",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        1840,
+        96
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"answer\": $json.output, \"type\": \"analysis\" } }}",
+        "options": {}
+      },
+      "id": "0b70bbf0-2a28-4fe2-a2ee-4cb13ebe1da5",
+      "name": "Send Analysis Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        2192,
+        96
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a helpful assistant for a queue management BI dashboard used by directors in insurance and banking sectors.\n\nAnswer this question naturally and helpfully in the same language it was asked:\n{{ $('Dashboard API').first().json.body.payload.question }}\n\nRules:\n- Be concise — maximum 3 sentences for greetings, maximum 5 sentences for system questions\n- Do NOT use markdown headers (###), bullet lists, or scenario demonstrations\n- Do NOT show example conversations or role-play scenarios\n- Just answer directly and naturally\n- If they greet you, greet back in one sentence\n- If they ask about the system, explain it briefly in 2-3 sentences",
+        "options": {
+          "systemMessage": "You are a friendly BI dashboard assistant. Be concise, helpful, and professional."
+        }
+      },
+      "id": "0b213112-ed13-4aff-9426-39c37f593e43",
+      "name": "Casual Chat",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        1056,
+        384
+      ]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ { \"answer\": $json.isCasual ? $json.answer : $input.first().json.output, \"type\": \"chat\" } }}",
+        "options": {}
+      },
+      "id": "d25b12a1-b32f-4481-aaa5-0834dc24f98c",
+      "name": "Send Casual Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        1408,
+        336
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "executeQuery",
+        "query": "SELECT\n  h.last_week_end,\n  h.history_count,\n  h.avg_volume_tickets,\n  h.avg_taux_service,\n  h.avg_wait,\n  h.avg_taux_abandon,\n  h.avg_occupation,\n  h.total_sla_breaches,\n  h.avg_productivite,\n  h.avg_flux_par_heure,\n  h.avg_tickets_par_guichet,\n  h.avg_nb_guichets,\n  p.prediction_count,\n  p.pred_avg_volume,\n  p.pred_avg_taux_service,\n  p.pred_avg_wait,\n  p.pred_avg_taux_abandon,\n  p.pred_total_sla_breaches\nFROM (\n  SELECT\n    MAX(jour)                                    AS last_week_end,\n    COUNT(*)                                     AS history_count,\n    ROUND(AVG(volume_tickets), 0)                AS avg_volume_tickets,\n    ROUND(AVG(taux_service) * 100, 2)            AS avg_taux_service,\n    ROUND(AVG(duree_attente_moy), 2)             AS avg_wait,\n    ROUND(AVG(taux_abandon) * 100, 2)            AS avg_taux_abandon,\n    ROUND(AVG(occupation_guichets) * 100, 2)     AS avg_occupation,\n    SUM(sla_breach_count)                        AS total_sla_breaches,\n    ROUND(AVG(productivite_agent) * 100, 2)      AS avg_productivite,\n    ROUND(AVG(flux_par_heure), 2)                AS avg_flux_par_heure,\n    ROUND(AVG(tickets_par_guichet), 2)           AS avg_tickets_par_guichet,\n    ROUND(AVG(nb_guichets_actifs), 0)            AS avg_nb_guichets\n  FROM kpi_history\n  WHERE annee = (SELECT MAX(annee) FROM kpi_history)\n    AND mois  = (SELECT MAX(mois) FROM kpi_history\n                 WHERE annee = (SELECT MAX(annee) FROM kpi_history))\n    AND jour >= DATE_SUB(\n                  (SELECT MAX(jour) FROM kpi_history\n                   WHERE annee = (SELECT MAX(annee) FROM kpi_history)\n                     AND mois  = (SELECT MAX(mois) FROM kpi_history\n                                  WHERE annee = (SELECT MAX(annee) FROM kpi_history))),\n                  INTERVAL 7 DAY)\n) h,\n(\n  SELECT\n    COUNT(*)                                     AS prediction_count,\n    ROUND(AVG(volume_tickets), 0)                AS pred_avg_volume,\n    ROUND(AVG(taux_service) * 100, 2)            AS pred_avg_taux_service,\n    ROUND(AVG(duree_attente_moy), 2)             AS pred_avg_wait,\n    ROUND(AVG(taux_abandon) * 100, 2)            AS pred_avg_taux_abandon,\n    SUM(sla_breach_count)                        AS pred_total_sla_breaches\n  FROM kpi_predictions\n  WHERE annee = (SELECT MAX(annee) FROM kpi_predictions)\n    AND mois  = (SELECT MAX(mois) FROM kpi_predictions\n                 WHERE annee = (SELECT MAX(annee) FROM kpi_predictions))\n    AND date >= DATE_SUB(\n                  (SELECT MAX(date) FROM kpi_predictions\n                   WHERE annee = (SELECT MAX(annee) FROM kpi_predictions)\n                     AND mois  = (SELECT MAX(mois) FROM kpi_predictions\n                                  WHERE annee = (SELECT MAX(annee) FROM kpi_predictions))),\n                  INTERVAL 7 DAY)\n) p",
+        "options": {}
+      },
+      "id": "23a2ed27-f563-4973-a61d-245c7f67312e",
+      "name": "Query Overview Stats",
+      "type": "n8n-nodes-base.mySql",
+      "typeVersion": 2.5,
+      "position": [
+        240,
+        512
+      ],
+      "credentials": {
+        "mySql": {
+          "id": "D96LvJ5HmIif9R13",
+          "name": "MySQL account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "00361935-0475-414e-ba14-1e123a6a2a45",
+      "name": "Send Overview Response",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        544,
+        464
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatNvidia",
+      "typeVersion": 1,
+      "position": [
+        1376,
+        688
+      ],
+      "id": "25f8e895-c09f-43ba-a854-df35d20817a0",
+      "name": "NVIDIA Nemotron Chat Model",
+      "credentials": {
+        "nvidiaApi": {
+          "id": "WPWeI7aQXu4DxOC3",
+          "name": "NVIDIA Nemotron account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Collapse all query result rows into ONE item for the AI\nconst allRows = $input.all().map(i => i.json);\n\nreturn [{\n  json: {\n    rows: allRows,\n    rowCount: allRows.length,\n    // Send max 50 rows to AI — enough for analysis, avoids token overflow\n    sample: allRows.slice(0, 50),\n    summary: {\n      totalRows: allRows.length,\n      truncated: allRows.length > 50\n    }\n  }\n}];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1616,
+        96
+      ],
+      "id": "0d7e3f9e-91a0-44fe-87ed-872f5d9e8748",
+      "name": "Prepare Analysis Input"
+    }
+  ],
+  "connections": {
+    "Dashboard API": {
+      "main": [
+        [
+          {
+            "node": "Route by Type",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route by Type": {
+      "main": [
+        [
+          {
+            "node": "Query History Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Query Prediction Data",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Detect Intent",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Query Overview Stats",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Overview Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Query History Data": {
+      "main": [
+        [
+          {
+            "node": "Format History Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format History Response": {
+      "main": [
+        [
+          {
+            "node": "Send History Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Query Prediction Data": {
+      "main": [
+        [
+          {
+            "node": "Format Prediction Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Prediction Response": {
+      "main": [
+        [
+          {
+            "node": "Send Prediction Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Detect Intent": {
+      "main": [
+        [
+          {
+            "node": "Route by Intent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Route by Intent": {
+      "main": [
+        [
+          {
+            "node": "Generate SQL Query",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Casual Chat",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Generate SQL Query": {
+      "main": [
+        [
+          {
+            "node": "Validate SQL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate SQL": {
+      "main": [
+        [
+          {
+            "node": "SQL or Casual",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SQL or Casual": {
+      "main": [
+        [
+          {
+            "node": "Execute Query",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Casual Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Query": {
+      "main": [
+        [
+          {
+            "node": "Prepare Analysis Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Analyze Data": {
+      "main": [
+        [
+          {
+            "node": "Send Analysis Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Casual Chat": {
+      "main": [
+        [
+          {
+            "node": "Send Casual Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Query Overview Stats": {
+      "main": [
+        [
+          {
+            "node": "Send Overview Response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "NVIDIA Nemotron Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Generate SQL Query",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Analyze Data",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Casual Chat",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Analysis Input": {
+      "main": [
+        [
+          {
+            "node": "Analyze Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "a84f0172b7393218a1eab4f1144e2d91fe67915f1c9f7bc43cec85e9b0046f7a"
+  }
+}

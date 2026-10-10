@@ -1,0 +1,215 @@
+export const en = {
+  auth: {
+    login: {
+      title: "Welcome Director",
+      subtitle: "Access",
+      description: "Sign in to manage your intelligence assets.",
+      email: "Work Email",
+      password: "Secure Password",
+      rememberMe: "Remember me",
+      forgotPassword: "Forgot Password?",
+      signIn: "Sign In",
+      or: "OR",
+      useBiometrics: "Use Biometrics",
+      noAccount: "Don't have an account?",
+      signUpLink: "Sign Up",
+      continueWithGoogle: "Sign in with Google",
+      openGmail: "Open Gmail",
+      notSeeingEmail: "Not seeing the email?",
+      wrongEmail: "Wrong email?",
+      rightPanel: {
+       title: "Intelligence Made Simple.",
+       description: "Access high-fidelity signals and market analytics with the new Director dashboard."
+      }
+    },
+    biometric: {
+      signInButton: "Sign in with Biometric",
+      enterEmailFirst: "Please enter your email first",
+      deviceNotSupported: "Your device does not support biometric authentication. Please enable Windows Hello, Touch ID, or fingerprint in your OS settings.",
+      userNotFound: "User not found. Please sign in with email or Google to create an account.",
+      notActivated: "Biometric is not activated for this account. Please sign in with email first, then enable it in Settings.",
+      authenticating: "Authenticating..."
+    },
+    signup: {
+      title: "Create Your",
+      subtitle: "Director Account",
+      description: "Sign up to manage your intelligence assets.",
+      fullName: "Full Name",
+      email: "Work Email",
+      password: "Secure Password",
+      signUp: "Sign Up",
+      or: "OR",
+      useBiometrics: "Use Biometrics",
+      haveAccount: "Already have an account?",
+      signInLink: "Sign In"
+    },
+    twoFactor: {
+      title: "Two-Factor Authentication",
+      description: "Please enter the verification code to continue.",
+      code: "Authentication Code",
+      verify: "Verify"
+    }
+  },
+  nav: {
+    overview: "Overview",
+    history: "History",
+    predictions: "Predictions",
+    comparison: "Comparison",
+    profile: "Profile",
+    settings: "Settings",
+    logout: "Log out"
+  },
+  overview: {
+    title: "Overview",
+    lastUpdate: "Last Updated: {time}",
+    totalWaitTime: "Total Wait Time",
+    avgWaitTime: "Avg. Wait Time",
+    totalVisitors: "Total Visitors",
+    avgServiceTime: "Avg. Service Time",
+    serviceRate: "Service Rate",
+    satisfaction: "Satisfaction",
+    productivity: "Productivity",
+    volumeTarget: "Volume Target",
+    charts: {
+      waitTimeDistribution: "Wait Time Distribution",
+      servicePerformance: "Service Performance",
+      dailyTrends: "Daily Trends"
+    },
+    syncHistory: "Sync History",
+    aiChat: "AI Chat",
+    aiAdvisorSubtitle: "Analytic advisor connected to system logs",
+    globalAvg: "Global Avg",
+    recentAlerts: "Recent Alerts",
+    dbSyncReminder: "Database Synchronization Reminder:",
+    total: "total",
+    avg: "avg",
+    mins: "mins",
+    callsH: "calls/h",
+    last7d: "last 7d",
+    target: "Target < 3.0m",
+    optimal: "Optimal",
+    abandonRate: "Abandon Rate",
+    high: "High",
+    healthy: "Healthy",
+    slaBreaches: "SLA Breaches",
+    critical: "Critical",
+    stable: "Stable",
+    peakHourVolume: "Peak Hour Volume",
+    highestDay: "Highest Day",
+    tickets: "tickets",
+    occupancyRate: "Occupancy Rate",
+    overloaded: "Overloaded",
+    busy: "Busy",
+    slack: "Slack",
+    alerts: {
+      longWaitTime: "⏳ Long wait time: {time}m at {site}",
+      highAbandonRate: "⚠️ High Abandon rate: {rate}% at {site}",
+      slaBreaches: "🚩 {count} SLA Breaches at {site}",
+      lowCompliance: "📉 Low compliance: {rate}% at {site}",
+      allHealthy: "Workforce levels healthy. No upcoming SLA warnings.",
+      allPerforming: "All site queues are performing beautifully.",
+      justNow: "Just now",
+      minutesAgo: "{count}m ago"
+    },
+    insights: {
+      weeklyCongestion: "Weekly congestion alert: {count} SLA breaches occurred in the last 7 days. Adjust staffing model immediately.",
+      operationalStable: "Operational model highly stable. Combined wait times averaged {wait} mins, SLA adherence at {service}%.",
+      waitTimesStable: "Calculated wait-times look extremely stable for this cycle. Keep resources balanced."
+    }
+  },
+  history: {
+    title: "History",
+    dateRange: "Date Range",
+    site: "Site",
+    service: "Service",
+    period: "Period",
+    week: "Last Week",
+    month: "Last Month",
+    quarter: "Last Quarter",
+    allSites: "All Global Sites",
+    allServices: "All Services",
+    table: {
+      date: "Date",
+      site: "Site",
+      service: "Service",
+      volume: "Volume",
+      waitTime: "Wait Time",
+      serviceTime: "Service Time",
+      serviceRate: "Service Rate",
+      satisfaction: "Satisfaction",
+      productivity: "Productivity"
+    }
+  },
+  predictions: {
+    title: "Predictions",
+    horizon: "Horizon",
+    week: "Next Week",
+    month: "Next Month",
+    quarter: "Next Quarter",
+    generate: "Generate Predictions",
+    syncPredictions: "Sync Predictions",
+    modelUpdateReminder: "Prediction Model Update:",
+    table: {
+      date: "Date",
+      predictedVolume: "Predicted Volume",
+      predictedWaitTime: "Predicted Wait Time",
+      confidence: "Confidence"
+    }
+  },
+  comparison: {
+    title: "Horizon Comparison",
+    horizon: "Comparison Horizon",
+    kpi: "KPI",
+    volume: "Volume",
+    waitTime: "Wait Time",
+    productivity: "Productivity",
+    serviceRate: "Service Rate",
+    personalization: "Personalization Factor",
+    agentStaffing: "Agent Staffing Adjustment"
+  },
+  profile: {
+    title: "User Profile",
+    avatar: "Avatar",
+    name: "Name",
+    email: "Email",
+    role: "Role",
+    joinDate: "Join Date",
+    enableBiometrics: "Enable Biometric Authentication",
+    setupBiometrics: "Setup Biometrics"
+  },
+  settings: {
+    title: "Settings",
+    language: "Language",
+    notifications: "Notifications",
+    theme: "Theme",
+    light: "Light",
+    dark: "Dark",
+    save: "Save",
+    accountProtection: "Account Protection",
+    available: "Available",
+    notAvailable: "Not Available",
+    n8nWebhook: "N8N Webhook Endpoint",
+    testWebhook: "⚡ Test Webhook Integration",
+    success: "✔ Success",
+    failed: "✖ Failed",
+    avatarHint1: "Click on your avatar to upload a new photo",
+    avatarHint2: "Recommended: Square images • Auto-resized to 400x400 • Any size accepted",
+    languages: {
+      fr: 'French',
+      en: 'English',
+      ar: 'Arabic',
+    }
+  },
+  common: {
+    syncing: "Syncing...",
+    loading: "Loading...",
+    noData: "No data available",
+    save: "Save",
+    cancel: "Cancel",
+    submit: "Submit",
+    waitP90: "Wait P90",
+    slaBreaches: "SLA Breaches",
+    itemsPerPage: "items per page",
+    ofPages: "of {pages} pages"
+  }
+};

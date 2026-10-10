@@ -1,0 +1,60 @@
+{
+  "source": "n8n",
+  "success": true,
+  "status": 200,
+  "data": {
+    "headers": {
+      "host": "ebook-untagged-smelting.ngrok-free.dev",
+      "user-agent": "node",
+      "content-length": "257",
+      "accept": "*/*",
+      "accept-encoding": "br, gzip, deflate",
+      "accept-language": "*",
+      "content-type": "application/json",
+      "sec-fetch-mode": "cors",
+      "x-forwarded-for": "196.118.125.53",
+      "x-forwarded-host": "ebook-untagged-smelting.ngrok-free.dev",
+      "x-forwarded-proto": "https"
+    },
+    "params": {},
+    "query": {},
+    "body": {
+      "type": "test",
+      "n8nWebhookUrl": "https://ebook-untagged-smelting.ngrok-free.dev/webhook/api/data",
+      "payload": {
+        "timestamp": "2026-06-22T00:03:31.492Z",
+        "message": "Hello from SmartQueueAnalyser Comparison & Analytics suite!",
+        "environment": "AI Studio Preview App"
+      }
+    },
+    "webhookUrl": "http://localhost:5678/webhook/api/data",
+    "executionMode": "production"
+  },
+  "headers": {
+    "host": "ebook-untagged-smelting.ngrok-free.dev",
+    "user-agent": "node",
+    "content-length": "257",
+    "accept": "*/*",
+    "accept-encoding": "br, gzip, deflate",
+    "accept-language": "*",
+    "content-type": "application/json",
+    "sec-fetch-mode": "cors",
+    "x-forwarded-for": "196.118.125.53",
+    "x-forwarded-host": "ebook-untagged-smelting.ngrok-free.dev",
+    "x-forwarded-proto": "https"
+  },
+  "params": {},
+  "query": {},
+  "body": {
+    "type": "test",
+    "n8nWebhookUrl": "https://ebook-untagged-smelting.ngrok-free.dev/webhook/api/data",
+    "payload": {
+      "timestamp": "2026-06-22T00:03:31.492Z",
+      "message": "Hello from SmartQueueAnalyst Comparison & Analytics suite!",
+      "environment": "AI Studio Preview App"
+    }
+  },
+  "webhookUrl": "http://localhost:5678/webhook/api/data",
+  "executionMode": "production",
+  "hasMore": false
+}

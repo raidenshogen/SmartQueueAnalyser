@@ -1,0 +1,24 @@
+{
+  "overview": {
+    "last_week_end": "2025-12-30",
+    "history_count": 5632,
+    "avg_volume_tickets": "87806",
+    "avg_taux_service": 39.05,
+    "avg_wait": 9.51,
+    "avg_taux_abandon": 25.17,
+    "avg_occupation": 1.4,
+    "total_sla_breaches": "8168",
+    "avg_productivite": 1.4,
+    "avg_flux_par_heure": 0.72,
+    "avg_tickets_par_guichet": 3.35,
+    "avg_nb_guichets": "180",
+    "prediction_count": 4152,
+    "pred_avg_volume": 16,
+    "pred_avg_taux_service": 41.77,
+    "pred_avg_wait": 9.16,
+    "pred_avg_taux_abandon": 24.96,
+    "pred_total_sla_breaches": 5542.832352232421
+  },
+  "syncedAt": "2026-07-08T12:57:09.624Z",
+  "source": "n8n"
+}

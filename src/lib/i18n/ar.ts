@@ -1,0 +1,215 @@
+export const ar = {
+  auth: {
+    login: {
+      title: "مدير مرحبًا بك",
+      subtitle: "وصول",
+      description: "سجل الدخول لإدارة أصولك الذكية.",
+      email: "البريد الإلكتروني للعمل",
+      password: "كلمة مرور آمنة",
+      rememberMe: "تذكرني",
+      forgotPassword: "نسيت كلمة المرور؟",
+      signIn: "تسجيل الدخول",
+      or: "أو",
+      useBiometrics: "استخدام البصمة",
+      noAccount: "ليس لديك حساب؟",
+      signUpLink: "إنشاء حساب",
+      continueWithGoogle: "تسجيل الدخول باستخدام Google",
+      openGmail: "افتح Gmail",
+      notSeeingEmail: "لا تستلم البريد الإلكتروني؟",
+      wrongEmail: "بريد إلكتروني خاطئ؟",
+      rightPanel: {
+       title: "الذكاء بأبسط صوره.",
+       description: "احصل على إشارات عالية الدقة وتحليلات السوق من خلال لوحة تحكم المدير الجديدة."
+      }
+    },
+    biometric: {
+      signInButton: "تسجيل الدخول بالبصمة",
+      enterEmailFirst: "يرجى إدخال بريدك الإلكتروني أولاً",
+      deviceNotSupported: "جهازك لا يدعم المصادقة البيومترية. يرجى تفعيل Windows Hello أو Touch ID أو البصمة في إعدادات النظام.",
+      userNotFound: "المستخدم غير موجود. يرجى تسجيل الدخول بالبريد الإلكتروني أو Google لإنشاء حساب.",
+      notActivated: "البصمة غير مفعلة لهذا الحساب. يرجى تسجيل الدخول بالبريد الإلكتروني أولاً ثم تفعيلها في الإعدادات.",
+      authenticating: "جاري المصادقة..."
+    },
+    signup: {
+      title: "أنشئ",
+      subtitle: "حساب المدير",
+      description: "سجل لإدارة أصولك الذكية.",
+      fullName: "الاسم الكامل",
+      email: "البريد الإلكتروني للعمل",
+      password: "كلمة مرور آمنة",
+      signUp: "إنشاء حساب",
+      or: "أو",
+      useBiometrics: "استخدام البصمة",
+      haveAccount: "لديك حساب بالفعل؟",
+      signInLink: "تسجيل الدخول"
+    },
+    twoFactor: {
+      title: "المصادقة الثنائية",
+      description: "يرجى إدخال رمز التحقق للمتابعة.",
+      code: "رمز المصادقة",
+      verify: "التحقق"
+    }
+  },
+  nav: {
+    overview: "نظرة عامة",
+    history: "السجل",
+    predictions: "التوقعات",
+    comparison: "المقارنة",
+    profile: "الملف الشخصي",
+    settings: "الإعدادات",
+    logout: "تسجيل الخروج"
+  },
+  overview: {
+    title: "نظرة عامة",
+    lastUpdate: "آخر تحديث: {time}",
+    totalWaitTime: "إجمالي وقت الانتظار",
+    avgWaitTime: "متوسط وقت الانتظار",
+    totalVisitors: "إجمالي الزائرين",
+    avgServiceTime: "متوسط وقت الخدمة",
+    serviceRate: "معدل الخدمة",
+    satisfaction: "الرضا",
+    productivity: "الإنتاجية",
+    volumeTarget: "هدف الحجم",
+    charts: {
+      waitTimeDistribution: "توزيع وقت الانتظار",
+      servicePerformance: "أداء الخدمة",
+      dailyTrends: "الاتجاهات اليومية"
+    },
+    syncHistory: "مزامنة السجل",
+    aiChat: "الدردشة مع الذكاء الاصطناعي",
+    aiAdvisorSubtitle: "مستشار تحليلي متصل بسجلات النظام",
+    globalAvg: "المتوسط العام",
+    recentAlerts: "التنبيهات الأخيرة",
+    dbSyncReminder: "تذكير بمزامنة قاعدة البيانات:",
+    mins: "دقيقة",
+    callsH: "مكالمات/س",
+    total: "المجموع",
+    avg: "متوسط",
+    last7d: "آخر 7 أيام",
+    target: "الهدف < 3.0د",
+    optimal: "مثالي",
+    abandonRate: "معدل التخلي",
+    high: "مرتفع",
+    healthy: "سليم",
+    slaBreaches: "انتهاكات SLA",
+    critical: "حرج",
+    stable: "مستقر",
+    peakHourVolume: "حجم ساعة الذروة",
+    highestDay: "أعلى يوم",
+    tickets: "تذاكر",
+    occupancyRate: "معدل الإشغال",
+    overloaded: "محمل فوق الطاقة",
+    busy: "مشغول",
+    slack: "منخفض",
+    alerts: {
+      longWaitTime: "⏳ وقت انتظار طويل: {time}د في {site}",
+      highAbandonRate: "⚠️ معدل تخلي مرتفع: {rate}% في {site}",
+      slaBreaches: "🚩 {count} انتهاكات SLA في {site}",
+      lowCompliance: "📉 امتثال منخفض: {rate}% في {site}",
+      allHealthy: "مستويات القوى العاملة صحية. لا توجد تحذيرات SLA قادمة.",
+      allPerforming: "جميع طوابير المواقع تعمل بشكل ممتاز.",
+      justNow: "الآن",
+      minutesAgo: "منذ {count}د"
+    },
+    insights: {
+      weeklyCongestion: "تنبيه الازدحام الأسبوعي: حدثت {count} انتهاكات SLA في آخر 7 أيام. اضبط نموذج التوظيف فوراً.",
+      operationalStable: "النموذج التشغيلي مستقر للغاية. متوسط أوقات الانتظار المجمعة {wait} دقيقة، الامتثال لـ SLA عند {service}%.",
+      waitTimesStable: "أوقات الانتظار المحسوبة تبدو مستقرة للغاية لهذه الدورة. حافظ على توازن الموارد."
+    }
+  },
+  history: {
+    title: "سجل مؤشرات ",
+    dateRange: "نطاق التاريخ",
+    site: "الموقع",
+    service: "الخدمة",
+    period: "الفترة",
+    week: "الأسبوع الماضي",
+    month: "الشهر الماضي",
+    quarter: "الربع الأخير",
+    allSites: "جميع المواقع العالمية",
+    allServices: "جميع الخدمات",
+    table: {
+      date: "التاريخ",
+      site: "الموقع",
+      service: "الخدمة",
+      volume: "الحجم",
+      waitTime: "وقت الانتظار",
+      serviceTime: "وقت الخدمة",
+      serviceRate: "معدل الخدمة",
+      satisfaction: "الرضا",
+      productivity: "الإنتاجية"
+    }
+  },
+  predictions: {
+    title: "التوقعات",
+    horizon: "الأفق",
+    week: "الأسبوع القادم",
+    month: "الشهر القادم",
+    quarter: "الربع القادم",
+    generate: "توليد التوقعات",
+    syncPredictions: "مزامنة التوقعات",
+    modelUpdateReminder: "تحديث النموذج التوقعي:",
+    table: {
+      date: "التاريخ",
+      predictedVolume: "الحجم المتوقع",
+      predictedWaitTime: "وقت الانتظار المتوقع",
+      confidence: "الثقة"
+    }
+  },
+  comparison: {
+    title: "مقارنة الأفق",
+    horizon: "أفق المقارنة",
+    kpi: "مؤشر الأداء الرئيسي",
+    volume: "الحجم",
+    waitTime: "وقت الانتظار",
+    productivity: "الإنتاجية",
+    serviceRate: "معدل الخدمة",
+    personalization: "عامل التخصيص",
+    agentStaffing: "ضبط موظفين"
+  },
+  profile: {
+    title: "الملف الشخصي",
+    avatar: "الصورة الرمزية",
+    name: "الاسم",
+    email: "البريد الإلكتروني",
+    role: "الوظيفة",
+    joinDate: "تاريخ الانضمام",
+    enableBiometrics: "تفعيل المصادقة الحيوية",
+    setupBiometrics: "إعداد البصمة"
+  },
+  settings: {
+    title: "الإعدادات",
+    language: "اللغة",
+    notifications: "الإشعارات",
+    theme: "المظهر",
+    light: "فاتح",
+    dark: "داكن",
+    save: "حفظ",
+    accountProtection: "حماية الحساب",
+    available: "متاح",
+    notAvailable: "غير متاح",
+    n8nWebhook: "نقطة نهاية N8N Webhook",
+    testWebhook: "⚡ اختبار تكامل Webhook",
+    success: "✔ نجاح",
+    failed: "✖ فشل",
+    avatarHint1: "انقر على صورتك الرمزية لتحميل صورة جديدة",
+    avatarHint2: "موصى به: صور مربعة • يتم تغيير حجمها تلقائيًا إلى 400x400 • يتم قبول أي حجم",
+    languages: {
+      fr: 'الفرنسية',
+      en: 'الإنجليزية',
+      ar: 'العربية',
+    }
+  },
+  common: {
+    syncing: "مزامنة...",
+    loading: "جارٍ التحميل...",
+    noData: "لا توجد بيانات",
+    save: "حفظ",
+    cancel: "إلغاء",
+    submit: "إرسال",
+    waitP90: "انتظار P90",
+    slaBreaches: "انتهاكات SLA",
+    itemsPerPage: "عناصر لكل صفحة",
+    ofPages: "من {pages} صفحات"
+  }
+};
